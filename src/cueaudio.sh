@@ -3,56 +3,58 @@
 
 # You may provide a audio file (preferibly in FLAC format)
 
-while [[ $# > 1 ]]
-do
-key="$1"
+function help
+{
+    echo USAGE:
+    echo cuefile -a audiofile [-c cuefile] [-d directory] [-p] [-v]
+}
 
-case $key in
-    -a|--audiofile)
-       audiofile="$2"
-       shift
-       ;;
-       -c|--cuefile)
-       cuefile="$2"
-       shift
-       ;;
-       -d|--directory)
-       directory="$2"
-       shift
-       ;;
-       -p|--purge)
-       purge="$2"
-       shift
-       ;;
-       -v|--verbose)
-       verbose="$2"
-       shift
-       ;;
-       *)
-       echo "Unknown flag"
-       exit 1
-       ;;
-esac
-shift
+
+function error
+{
+    echo $*
+    exit 1
+}
+
+while getopts 'hpva:c:d:' opt
+do
+    case $opt in
+        a) audiofile="$OPTARG";;
+        c) cuefile="$OPTARG";;
+        d) directory="$OPTARG";;
+        p) purge='true';;
+        v) verbose=0;;
+        h) help; exit 0;;
+        \?) echo "Unknown option: -$opt" >&2; exit 1;;
+        :) echo "Missing option argument for -$opt" >&2; exit 1;;
+        *) echo "Unimplemented option: -$opt" >&2; exit 1;;
+    esac
 done
 
 
 
-if [ -n "$audiofile" ] && [ -z "$cuefile" ]
+if [ -z "$cuefile" ]
 then
-    cuefile=${audiofile%.*}.cue
-elif [ -z "$audiofile" ] && [ -z "$cuefile" ]
+    if [ -z "$audiofile" ]
+    then
+        help
+        exit 1
+    else
+        echo Audio: $audiofile
+        test -f "$audiofile" || error File not exists: $audiofile
+
+        echo Deducting CUE file name from audio file name...
+
+        cuefile=${audiofile%.*}.cue
+        echo CUE: $cuefile
+        test -f "$cuefile" || error File not exists: $cuefile
+    fi
+elif [ -z "$audiofile" ]
 then
-    echo Necesito al menos el nombre del archivo de audio
-    exit 1
-else
-    echo No encuentro los archivos $audiofile ni $cuefile
+    echo I need an audio file name.
+    help
     exit 1
 fi
-
-test -f "$audiofile" || exit 2
-test -f "$cuefile" || exit 2
-
 
 echo Processing "$audiofile"...
 
@@ -131,11 +133,3 @@ for i in "$albumdir"/split-track*.flac; do
         mv "$i" "$albumdir"/"$FILENAME"
     fi
 done
-
-
-if [ "$status" = '0' ]
-then
-    echo OK
-else
-    echo Failed
-fi
