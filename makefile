@@ -3,7 +3,7 @@ PREFIX='/usr'
 TEMPDIR := $(shell mktemp -u --suffix .$(NAME))
 
 install:
-	install -Dm 755 src/$(NAME).sh $(PREFIX)/bin/$(NAME)
+	install -Dm 755 cueaudio/$(NAME).sh $(PREFIX)/bin/$(NAME)
 	install -Dm 644 LICENSE $(PREFIX)/share/licenses/$(NAME)/COPYING
 	install -Dm 644 README.md $(PREFIX)/share/doc/$(NAME)/README
 

@@ -1,12 +1,13 @@
 #!/bin/bash
-# cueflac flac [cue]
 
+# Splits an audio file with a CUE sheet.
 # You may provide a audio file (preferibly in FLAC format)
+
 
 function help
 {
     echo USAGE:
-    echo cuefile -a audiofile [-c cuefile] [-d directory] [-p] [-v]
+    echo cueaudio -a audiofile [-c cuefile] [-d directory] [-p] [-v]
 }
 
 
