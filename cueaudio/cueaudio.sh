@@ -6,8 +6,16 @@
 
 function help
 {
-    echo USAGE:
-    echo cueaudio -a audiofile [-c cuefile] [-d directory] [-p] [-v]
+    cat <<EOF
+Usage:   cueaudio -a audiofile [-c cuefile] [-d directory] [-p] [-v]
+
+Basic options:
+ -a <audiofile>    The audio file to split
+ -c <cuefile>      The CUE sheet to use. It will be deducted by default
+ -d directory      Output directory. It will be Work directory by default
+ -p                Delete audiofile if the split was successful
+ -v                Verbose output
+EOF
 }
 
 
